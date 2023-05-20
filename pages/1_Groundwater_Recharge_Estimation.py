@@ -3,7 +3,7 @@ from datetime import datetime
 
 from gwr import hydro_properties, met_properties, soil_properties, recharge_properties, ui_visuals
 import ee
-import geemap.foliumap as geemap
+import geemap as geemap
 import streamlit as st
 import base64
 import logging
