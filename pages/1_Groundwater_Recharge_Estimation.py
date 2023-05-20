@@ -196,7 +196,6 @@ vis_orgc = {'min': 0.01, 'max': 1, 'gamma': 2.0}
 my_map.addLayer(orgc_bands, vis_orgc, "Organic Carbon Content")
 my_map.add_time_slider(orgc_bands, vis_orgc, labels=all_bands, time_interval=1)
 
-my_map.add_child(geemap.inspector)
 # # Set visualization parameters.
 # vis_params = {
 #     "min": 0.01,
