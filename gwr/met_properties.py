@@ -1,5 +1,7 @@
 import ee
 from gwr import ee_utils
+import geemap.foliumap as geemap
+
 
 
 def get_precipitation_data_for_dates(start_date, end_date):
@@ -24,6 +26,7 @@ def get_mean_monthly_meteorological_data(start_date, end_date):
     Returns an ImageCollection that combines the Precipitation and Potential Evaporation data
     for a region across a time period resampled to provide monthly mean values
     """
+    
     pr = get_precipitation_data_for_dates(start_date, end_date)
     pet = get_potential_evaporation_for_dates(start_date, end_date)
 
@@ -36,7 +39,9 @@ def get_mean_monthly_meteorological_data(start_date, end_date):
     # Combine precipitation and evapotranspiration.
     meteo = pr_m.combine(pet_m)
 
+    
     return meteo
+
 
 
 def get_mean_monthly_meteorological_data_for_roi_df(roi, scale, meteoImageCollection, ):
@@ -54,3 +59,6 @@ def get_mean_monthly_meteorological_data_for_roi_df(roi, scale, meteoImageCollec
     meteo_df["date"] = meteo_df.index.strftime("%m-%Y")
 
     return meteo_df
+
+
+

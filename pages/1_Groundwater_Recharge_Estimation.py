@@ -96,6 +96,7 @@ def convert_to_polygon(coordinates):
 
 
 # Create a GEE map centered on the location of interest
+
 my_map = geemap.Map(
     zoom=3,
     Draw_export=True,
@@ -170,16 +171,39 @@ clay = soil_properties.get_soil_prop("clay")
 orgc = soil_properties.get_soil_prop("orgc")
 # ph = dataset.select("PHIHOX").first()
 
-
+#$Set visualization parameter and addlayer on the map for sand content
+all_bands = ['b0', 'b10', 'b30', 'b60', 'b100', 'b200']
+sand_bands = sand.select(all_bands)
 # Set visualization parameters.
-vis_params = {
-    "min": 0.01,
-    "max": 1,
-    "opacity": 1,
-}
+vis_sand = {'min': 0.01, 'max': 1}
 
-# Add the sand content data to the map object.
-my_map.addLayer(sand, vis_params, "Sand Content")
+my_map.addLayer(sand_bands, vis_sand, "Sand Content")
+my_map.add_time_slider(sand_bands, vis_sand, labels=all_bands, time_interval=1)
+
+##Set visualization parameter and addlayer on the map for clay content
+all_bands = ['b0', 'b10', 'b30', 'b60', 'b100', 'b200']
+clay_bands = clay.select(all_bands)
+vis_clay = {'min': 0.01, 'max': 1, 'gamma': 2.0}
+
+my_map.addLayer(clay_bands, vis_clay, "Clay Content")
+my_map.add_time_slider(clay_bands, vis_clay, labels=all_bands, time_interval=1)
+
+##Set visualization parameter and addlayer on the map for organic matter content
+all_bands = ['b0', 'b10', 'b30', 'b60', 'b100', 'b200']
+orgc_bands = orgc.select(all_bands)
+vis_orgc = {'min': 0.01, 'max': 1, 'gamma': 2.0}
+
+my_map.addLayer(orgc_bands, vis_orgc, "Organic Carbon Content")
+my_map.add_time_slider(orgc_bands, vis_orgc, labels=all_bands, time_interval=1)
+# # Set visualization parameters.
+# vis_params = {
+#     "min": 0.01,
+#     "max": 1,
+#     "opacity": 1,
+# }
+
+# # Add the sand content data to the map object.
+# my_map.addLayer(sand, vis_params, "Sand Content")
 
 # Add a marker at the location of interest.
 # Add a marker at the location of interest.
@@ -187,15 +211,15 @@ my_map.addLayer(sand, vis_params, "Sand Content")
 # Create a polygon and add it to the map
 
 # Create a polygon and add it to the map
-polygon = folium.Polygon(locations=parsed_list, popup="Area of interest")
-polygon.add_to(my_map)
+# polygon = folium.Polygon(locations=parsed_list, popup="Area of interest")
+# polygon.add_to(my_map)
 
 # # Create a feature group and add the polygon to it
 # feature_group = folium.FeatureGroup(name='My Layer')
 # feature_group.add_child(polygon)
 
 # Add the feature group to the map
-my_map.add_child(polygon)
+# my_map.add_child(polygon)
 
 # Add layer control to the map
 #folium.LayerControl().add_to(my_map)
@@ -205,8 +229,7 @@ st.subheader("Google Earth Map")
 # Display the map.
 my_map.to_streamlit(height=600, responsive=True, scrolling=False)
 
-# Add a layer control panel to the map.
-my_map.add_child(folium.LayerControl())
+
 
 
 # Add a layer control panel to the map.
@@ -266,6 +289,65 @@ profile_fc = soil_properties.get_local_soil_profile_at_poi(
 # Adding subheader and description for hydrolic properties
 st.subheader("Hydraulic Properties of Soil at Different Depths")
 
+#Second Map
+my_map2 = geemap.Map(
+    zoom=3,
+    Draw_export=True,
+)
+
+
+#Adding Layers for Hydraulic Properties
+##Set visualization parameter and addlayer on the map for organic matter content
+all_bands = ['b0', 'b10', 'b30', 'b60', 'b100', 'b200']
+orgm_bands = orgm.select(all_bands)
+vis_orgm = {'min': 0.01, 'max': 1, 'gamma': 2.0, "opacity": 1}
+
+my_map2.addLayer(orgm_bands, vis_orgm, "Organic Matter Content")
+my_map2.add_time_slider(orgc_bands, vis_orgm, labels=all_bands, time_interval=1)
+
+#Adding layer for Field capacity 
+vis_fieldcapacity = {
+    "min": 0.01,
+    "max": 1,
+    "opacity": 1,
+    "color": {
+        "gradient": "linear",
+        "stops": [
+            [0, "lightblue"],
+            [0.25, "skyblue"],
+            [0.5, "royalblue"],
+            [0.75, "navy"],
+            [1, "darkblue"]
+        ]
+    }
+}
+
+my_map2.addLayer(field_capacity, vis_fieldcapacity, "Field Capacity")
+
+#Adding layer for wilting point 
+vis_wilting = {
+    "min": 0.01,
+    "max": 1,
+    "opacity": 1,
+    "color": {
+        "gradient": "linear",
+        "stops": [
+            [0, "lightblue"],
+            [0.25, "skyblue"],
+            [0.5, "royalblue"],
+            [0.75, "navy"],
+            [1, "darkblue"]
+        ]
+    }
+}
+
+my_map2.addLayer(wilting_point, vis_wilting, "Wilting Point")
+
+# Display the my_map2.
+my_map2.to_streamlit(height=600, responsive=True, scrolling=False)
+# Add a layer control panel to the map.
+my_map2.addLayerControl()
+
 st.write(
     "This visualization displays the water content of soil at the wilting point and field capacity at different depths (0, 10, 30, 60, 100, and 200 cm). Water content at the wilting point represents the minimum amount of soil water that a plant requires to avoid wilting, while water content at field capacity indicates the maximum amount of water that the soil can hold against the force of gravity. By examining these properties at different depths, we can gain insight into the water retention capacity of the soil and understand how it affects plant growth and water availability."
 )
@@ -277,17 +359,49 @@ st.pyplot(
 )
 
 
-
-
 # _____________________________________________Getting Meteorological Datasets_____________________________________________
 meteo = met_properties.get_mean_monthly_meteorological_data(i_date, f_date)
 meteo_df = met_properties.get_mean_monthly_meteorological_data_for_roi_df(roi, scale, meteo)
+
+pr = met_properties.get_precipitation_data_for_dates(i_date, f_date)
+pet = met_properties.get_potential_evaporation_for_dates(i_date, f_date)
+
+#ThirdMap
+my_map3 = geemap.Map(
+    zoom=3,
+    Draw_export=True,
+)
+
+#Adding Layers for Pricipitation data
+vis_pr = {
+    'min': 1.0,
+    'max': 17.0,
+    'palette': ['001137', '0aab1e', 'e7eb05', 'ff4a2d', 'e90000'],
+
+}
+
+my_map3.addLayer(pr, vis_pr, "Precipitation")
+
+#Adding Layers for Potential Evaporation data
+vis_pet = {
+    'bands': ["PET"],
+    'min': 0.0,
+    'max': 300.0,
+    'palette':  ['001137', '0aab1e', 'e7eb05', 'ff4a2d', 'e90000']}
+
+
+my_map3.addLayer(pet, vis_pet, "Potential Evaporation")
 
 # _____________________________________________Display Meteorological Dataset_____________________________________________
 # Adding subheader and description for mateorological data
 st.subheader(
     "Precipitation and Potential Evapotranspiration Data for Region of Interest"
 )
+
+# Display the my_map3.
+my_map3.to_streamlit(height=600, responsive=True, scrolling=False)
+# Add a layer control panel to the map.
+my_map3.addLayerControl()
 
 st.write(
     "This section displays a dataframe of precipitation and potential evapotranspiration data for a selected region of interest within a given time frame. The data is presented in columns, with each column representing a specific variable related to the water cycle."
