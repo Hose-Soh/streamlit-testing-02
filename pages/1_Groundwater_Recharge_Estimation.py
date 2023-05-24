@@ -195,7 +195,6 @@ vis_orgc = {'min': 0.01, 'max': 1, 'gamma': 2.0}
 
 my_map.addLayer(orgc_bands, vis_orgc, "Organic Carbon Content")
 my_map.add_time_slider(orgc_bands, vis_orgc, labels=all_bands, time_interval=1)
-
 # # Set visualization parameters.
 # vis_params = {
 #     "min": 0.01,
@@ -481,7 +480,29 @@ st.pyplot(ui_visuals.generate_pr_pet_rech_graph(recharge_df))
 rdfy = recharge_df.resample("Y").sum()
 
 # Calculate the mean value.
-annual_mean_recharge_df = recharge_properties.get_mean_annual_recharge_at_roi_df(meteo, roi, scale, stfc, fcm, wpm, time0)
+annual_mean_recharge_df, recharge_collection = recharge_properties.get_mean_annual_recharge_at_roi_df(meteo, roi, scale, stfc, fcm, wpm, time0)
+
+my_map4 = geemap.Map(
+    zoom=3,
+    Draw_export=True,
+)
+
+# Set visualization parameters for recharge.
+rech_vis_params = {
+    "bands": "rech",
+    "min": 0,
+    "max": 500,
+    "opacity": 1,
+    "palette": ["red", "orange", "yellow", "green", "blue", "purple"],
+}
+
+
+my_map4.addLayer(recharge_collection, rech_vis_params, "Recharge Water")
+
+# Display the map.
+my_map4.to_streamlit(height=600, responsive=True, scrolling=False)
+# Add a layer control panel to the map.
+my_map4.addLayerControl()
 
 st.write(
     "The mean annual recharge at across region of interest"
