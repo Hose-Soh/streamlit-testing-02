@@ -211,7 +211,7 @@ def get_monthly_mean_recharge_at_roi_df(meteo, roi, scale, stfc, fcm, wpm, time0
     rdf.rename(columns={'rech': 'mean-rech'}, inplace=True)
     rdf["date"] = rdf.index.strftime("%m-%Y")
 
-    return rdf
+    return rdf, rech_coll
 
 
 def get_mean_annual_recharge_at_roi_df(meteo, roi, scale, stfc, fcm, wpm, time0):
@@ -236,4 +236,4 @@ def get_mean_annual_recharge_at_roi_df(meteo, roi, scale, stfc, fcm, wpm, time0)
     rdf.rename(columns={'apwl': 'mean-annual-apwl'}, inplace=True)
     rdf.rename(columns={'st': 'mean-annual-st'}, inplace=True)
     rdf.rename(columns={'rech': 'mean-annual-rech'}, inplace=True)
-    return rdf, rech_coll 
+    return rdf
