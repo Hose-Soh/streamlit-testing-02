@@ -446,7 +446,7 @@ stfc = recharge_properties.calculate_stored_water_at_fc(taw, p)
 # Define the initial time (time0) according to the start of the collection.
 time0 = meteo.first().get("system:time_start")
 
-recharge_df = recharge_properties.get_monthly_mean_recharge_at_roi_df(meteo, roi, scale, stfc, fcm, wpm, time0)
+recharge_df, recharge_collection = recharge_properties.get_monthly_mean_recharge_at_roi_df(meteo, roi, scale, stfc, fcm, wpm, time0)
 
 # subheader
 st.subheader("Comparison of Precipitation, Potential Evapotranspiration, and Recharge")
@@ -480,7 +480,7 @@ st.pyplot(ui_visuals.generate_pr_pet_rech_graph(recharge_df))
 rdfy = recharge_df.resample("Y").sum()
 
 # Calculate the mean value.
-annual_mean_recharge_df, recharge_collection = recharge_properties.get_mean_annual_recharge_at_roi_df(meteo, roi, scale, stfc, fcm, wpm, time0)
+annual_mean_recharge_df = recharge_properties.get_mean_annual_recharge_at_roi_df(meteo, roi, scale, stfc, fcm, wpm, time0)
 
 
 # Set visualization parameters for recharge.
