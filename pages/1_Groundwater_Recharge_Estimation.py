@@ -398,10 +398,7 @@ st.subheader(
     "Precipitation and Potential Evapotranspiration Data for Region of Interest"
 )
 
-# Display the my_map3.
-my_map3.to_streamlit(height=600, responsive=True, scrolling=False)
-# Add a layer control panel to the map.
-my_map3.addLayerControl()
+
 
 st.write(
     "This section displays a dataframe of precipitation and potential evapotranspiration data for a selected region of interest within a given time frame. The data is presented in columns, with each column representing a specific variable related to the water cycle."
