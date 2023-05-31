@@ -217,3 +217,33 @@ def generate(profile_sand, profile_clay, profile_orgc, olm_bands, olm_depths):
     )
 
     return fig
+
+def generate_soil_moisture_graph(soilmois_df):
+    # Data visualization
+    fig, ax = plt.subplots(figsize=(15, 6))
+
+    # Title of the plot.
+    ax.set_title(
+        "Comparison of Soil and Sub Soil Moisture over ROI", fontsize=14
+    )
+
+    # Lineplot associated with precipitations.
+    soilmois_df["mean-ssm"].plot(kind="line", ax=ax, label="Mean Soil Moisture")
+
+    # Lineplot associated with potential evapotranspiration.
+    soilmois_df["mean-susm"].plot(
+        kind="line", ax=ax, label="Mean Sub Soil ", color="orange", alpha=0.5
+    )
+
+    # Add a legend.
+    ax.legend(loc='upper right')
+
+    # Add some x/y-labels properties.
+    ax.set_ylabel("Intensity [mm]")
+    ax.set_xlabel(None)
+
+    # Define the date format and shape of x-labels.
+    x_labels = soilmois_df['date']
+    ax.set_xticks(x_labels)
+
+    return fig

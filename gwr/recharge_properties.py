@@ -182,7 +182,7 @@ def get_recharge_at_poi_df(meteo, poi, scale, stfc, fcm, wpm, time0):
     arr = rech_coll.getRegion(poi, scale).getInfo()
     rdf = ee_utils.ee_array_to_df(arr, ["pr", "pet", "apwl", "st", "rech"]).sort_index()
 
-    return rdf
+    return rdf, rech_coll
 
 
 def get_monthly_mean_recharge_at_roi_df(meteo, roi, scale, stfc, fcm, wpm, time0):
